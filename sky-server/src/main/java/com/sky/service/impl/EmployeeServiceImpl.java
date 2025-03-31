@@ -66,7 +66,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employee;
     }
 
-    @Override
     public void save(EmployeeDTO employeeDTO) {
         Employee employee = new Employee();
 
@@ -98,5 +97,27 @@ public class EmployeeServiceImpl implements EmployeeService {
         long total = page.getTotal();
         List<Employee> records = page.getResult();
         return new PageResult(total,records);
+    }
+
+    public void startOrStop(Integer status, Long id){
+        Employee employee = Employee.builder().status(status).id(id).build();
+        employeeMapper.update(employee);
+
+    }
+    public Employee getById(Long id){
+        Employee employee = employeeMapper.getById(id);
+
+        employee.setPassword("****");
+        return employee;
+    }
+
+    public void update(EmployeeDTO employeeDTO){
+        Employee employee = new Employee();
+        BeanUtils.copyProperties(employeeDTO,employee);
+
+        employee.setUpdateTime(LocalDateTime.now());
+        employee.setUpdateUser(BaseContext.getCurrentId());
+
+        employeeMapper.update(employee);
     }
 }
